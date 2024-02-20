@@ -33,7 +33,7 @@ def train(
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # save the parameters!
-    #######################
+    ####################### need to do this #############
 
     # load model
     model = Net().to(device)
