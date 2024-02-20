@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+from ser.data import train_dataloader, validate_dataloader
 
 import typer
 
@@ -47,6 +48,8 @@ def train(
     )
 
 # data loaders were here now in data.py
+    training_dataloader = train_dataloader(batch_size, ts)
+    validation_dataloader = validate_dataloader(batch_size, ts)
 
     # train
     for epoch in range(epochs):
