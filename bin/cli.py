@@ -1,11 +1,9 @@
 from pathlib import Path
 import torch
-from torch import optim
-import torch.nn as nn
-import torch.nn.functional as F
 from torchvision import transforms
 from ser.data import train_dataloader, validate_dataloader
 from ser.train import train as trainer
+import json
 
 
 import typer
@@ -36,7 +34,11 @@ def train(
 
     # save the parameters!
     ####################### need to do this #############
-    params = (name, epochs, batch_size, learning_rate)
+    params = {'name' : name, 'epochs' : epochs, 'batch_size' : batch_size, 'learning_rate' : learning_rate}
+    file_path = PROJECT_ROOT / "ser" / "params.json"
+    with open(file_path, 'w') as json_file:
+        json.dump(params, json_file)
+
 
     # torch transforms
     ts = transforms.Compose(

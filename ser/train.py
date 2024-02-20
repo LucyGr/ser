@@ -9,10 +9,10 @@ def train(run_path, params, train_dataloader, val_dataloader, device):
     model = Net().to(device)
 
     # setup params
-    optimizer = optim.Adam(model.parameters(), lr=params.learning_rate)
+    optimizer = optim.Adam(model.parameters(), lr=params['learning_rate'])
 
     # train
-    for epoch in range(params.epochs):
+    for epoch in range(params['epochs']):
         batch_train(model, train_dataloader, optimizer, epoch, device)
         batch_val(model, val_dataloader, epoch, device)
 

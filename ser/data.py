@@ -1,3 +1,4 @@
+from pathlib import Path
 from torch.utils.data import DataLoader
 from torchvision import datasets
 
@@ -7,7 +8,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 
 
-def train_dataloader(batch_size, transform):
+def train_dataloader(batch_size, ts):
     return(
         DataLoader(
             datasets.MNIST(root=DATA_DIR, download=True, train=True, transform=ts),
@@ -16,7 +17,7 @@ def train_dataloader(batch_size, transform):
             num_workers=1,)
     )
 
-def validate_dataloader(batch_size, transform):
+def validate_dataloader(batch_size, ts):
     return(
         DataLoader(
             datasets.MNIST(root=DATA_DIR, download=True, train=False, transform=ts),
