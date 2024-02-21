@@ -8,8 +8,10 @@ import git
 from ser.train import train as run_train
 from ser.constants import RESULTS_DIR
 from ser.data import train_dataloader, val_dataloader, test_dataloader
-from ser.params import Params, save_params
+from ser.params import Params, save_params, load_params
 from ser.transforms import transforms, normalize
+
+from ser.infer import do_infer, select_image
 
 main = typer.Typer()
 
@@ -59,45 +61,23 @@ def train(
 
 
 @main.command()
-def infer():
-    run_path = Path("./path/to/one/of/your/training/runs")
-    label = 6
+def infer(
+    run_path: str = typer.Option(
+        ..., '-p', '--path', help="File path for inference."
+    ),
+    label: int = typer.Option(
+        6, '-l', '--label', help ="Label of image you want to load"
+    )
+):
 
     # select image to run inference for
-    dataloader = test_dataloader(1, transforms(normalize))
-    images, labels = next(iter(dataloader))
-    while labels[0].item() != label:
-        images, labels = next(iter(dataloader))
 
     # load the model
+    run_path = Path(run_path)
+    params = load_params(run_path)
     model = torch.load(run_path / "model.pt")
-
-    # run inference
-    model.eval()
-    output = model(images)
-    pred = output.argmax(dim=1, keepdim=True)[0].item()
-    confidence = max(list(torch.exp(output)[0]))
-    pixels = images[0][0]
-    print(generate_ascii_art(pixels))
-    print(f"This is a {pred}")
+    image = select_image(label)
+    do_infer(model, image)
 
 
-def generate_ascii_art(pixels):
-    ascii_art = []
-    for row in pixels:
-        line = []
-        for pixel in row:
-            line.append(pixel_to_char(pixel))
-        ascii_art.append("".join(line))
-    return "\n".join(ascii_art)
 
-
-def pixel_to_char(pixel):
-    if pixel > 0.99:
-        return "O"
-    elif pixel > 0.9:
-        return "o"
-    elif pixel > 0:
-        return "."
-    else:
-        return " "
