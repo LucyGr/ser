@@ -73,10 +73,11 @@ def infer(
     # select image to run inference for
 
     # load the model
+    run_path = Path(run_path)
     params = load_params(run_path)
     model = torch.load(run_path / "model.pt")
     image = select_image(label)
-    do_infer(params, model, image, label)
+    do_infer(model, image)
 
 
 
