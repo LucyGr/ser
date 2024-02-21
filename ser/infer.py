@@ -1,8 +1,16 @@
 from ser.data import test_dataloader
 from ser.transforms import transforms, normalize
+import torch
 
-def do_infer():
-
+def do_infer(model, image):
+    model.eval()
+    output = model(image)
+    pred = output.argmax(dim=1, keepdim=True)[0].item()
+    confidence = max(list(torch.exp(output)[0]))
+    pixels = image[0][0]
+    print(generate_ascii_art(pixels))
+    print(f"This is a {pred}, with confidence {confidence * 100:.2f}%")
+    # 
 
 
 
